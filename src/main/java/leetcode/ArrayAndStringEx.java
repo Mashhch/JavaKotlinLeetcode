@@ -2,7 +2,7 @@ package leetcode;
 
 public class ArrayAndStringEx {
 
-    public static void rotate(int[] arr, int m) {
+    public static void rotate1(int[] arr, int m) {
         for (int i = arr.length - 1; i > m; i--) {
             arr[i] = arr[i - 1];
         }
@@ -18,7 +18,7 @@ public class ArrayAndStringEx {
         }
         while (i < m + n && j < n) {
             if (nums1[i] > nums2[j]) {
-                rotate(nums1, i);
+                rotate1(nums1, i);
                 nums1[i] = nums2[j];
                 j++;
                 m1++;
@@ -32,12 +32,12 @@ public class ArrayAndStringEx {
                 }
                 return;
             } else if (i == m1 & nums1[i] > nums2[j]) {
-                rotate(nums1, i);
+                rotate1(nums1, i);
                 nums1[i] = nums2[j];
                 i++;
                 m1++;
             } else if (nums1[i] <= nums2[j] & nums1[i + 1] >= nums2[j]) {
-                rotate(nums1, i + 1);
+                rotate1(nums1, i + 1);
                 nums1[i + 1] = nums2[j];
                 i++;
                 j++;
@@ -48,7 +48,7 @@ public class ArrayAndStringEx {
         }
     }
 
-    public void MergeSortedArray2(int[] nums1, int m, int[] nums2, int n) {
+    public static void MergeSortedArray2(int[] nums1, int m, int[] nums2, int n) {
         int midx = m - 1;
         int nidx = n - 1;
         int right = m + n - 1;
@@ -86,7 +86,7 @@ public class ArrayAndStringEx {
         return nums[i] == val ? i : i + 1;
     }
 
-    public int removeElement2(int[] nums, int val) {
+    public static int removeElement2(int[] nums, int val) {
         int i = 0;
         for (int num : nums) {
             if (num != val) {
@@ -94,5 +94,160 @@ public class ArrayAndStringEx {
             }
         }
         return i;
+    }
+
+    public static int removeDuplicates(int[] nums) {
+        if (nums.length == 0) return 0;
+        int ind = 0;
+        int val = nums[0];
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
+                ind++;
+                nums[ind] = nums[i];
+                val = nums[i];
+            }
+        }
+        return ind + 1;
+    }
+
+    public int removeDuplicates2(int[] nums) {
+        if (nums.length == 0) return 0;
+        int ind = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[ind] = nums[i];
+                ind++;
+            }
+        }
+        return ind;
+    }
+
+    public static int removeDuplicatesV2(int[] nums) {
+        if (nums.length <= 2) return nums.length;
+        int ind = 0;
+        int firstElemIndex = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[ind]) {
+                ind++;
+                firstElemIndex = i;
+                nums[ind] = nums[i];
+            } else if (nums[i] == nums[ind] & firstElemIndex == i - 1) {
+                ind++;
+                nums[ind] = nums[i];
+            }
+        }
+        return ind+1;
+    }
+
+    public int removeDuplicatesV2_2(int[] nums) {
+        if (nums.length <= 2) return nums.length;
+        int ind = 2;
+        for (int i = 2; i < nums.length; i++) {
+            if (nums[i] != nums[ind-2]){
+                nums[ind] = nums[i];
+                ind++;
+            }
+        }
+        return ind;
+    }
+
+    public static int majorityElement(int[] nums) {
+        int value = nums[0];
+        int count = 1;
+        for (int i = 1; i< nums.length; i++) {
+            if (value == nums[i]) {
+                count++;
+            } else {
+                count--;
+                if (count == 0) {
+                    value = nums[i];
+                    count = 1;
+                }
+            }
+        }
+
+        return value;
+    }
+
+
+    public static void rotate(int[] nums, int k) {
+        k %= nums.length;
+
+        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+    }
+
+    private static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    public int maxProfit(int[] prices) {
+        int min = prices[0];
+        int maxDiff = 0;
+        int sum = 0;
+        for (int i = 1; i<prices.length; i++) {
+            if (prices[i] < prices[i-1]) {
+                min = prices[i];
+                sum +=maxDiff;
+                maxDiff = 0;
+            } else if (prices[i] - min > maxDiff) {
+                maxDiff = prices[i] - min;
+            }
+        }
+        return sum + maxDiff;
+    }
+
+    public int maxProfit2(int[] prices) {
+        int sum = 0;
+        for (int i = 1; i<prices.length; i++) {
+            if (prices[i] > prices[i-1]) {
+                sum +=prices[i] - prices[i-1];
+            }
+        }
+        return sum;
+    }
+
+    public boolean canJump(int[] nums) {
+        int l = nums.length-1;
+        for (int j = l-1; j>=0; j--){
+            if (l-j <= nums[j]) l = j;
+        }
+
+        return l == 0;
+    }
+
+    public int jump(int[] nums) {
+        int iDist = 0;
+        int i = 0;
+        int inext = 0;
+        int numJumps = 0;
+        while(i <nums.length-1){
+            int ind = 0;
+            int maxDist = 0;
+            for(int j = inext; j < nums.length && iDist > 0; j++){
+                if (maxDist< nums[j] + j){
+                    maxDist = nums[j] + j;
+                    ind = j; //откуда можно прыгнуть дальше всего
+                }
+                iDist--;
+            }
+            //сдвигаем на следующий прыжок
+            inext = ind +1;
+            iDist = nums[ind];
+            i = nums[ind] + ind;
+            numJumps++;
+        }
+        return numJumps;
+    }
+
+    public static void main(String[] args) {
+
     }
 }
