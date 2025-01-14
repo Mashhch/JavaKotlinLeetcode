@@ -1,5 +1,8 @@
 package leetcode;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class ArrayAndStringEx {
 
     public static void rotate1(int[] arr, int m) {
@@ -136,14 +139,14 @@ public class ArrayAndStringEx {
                 nums[ind] = nums[i];
             }
         }
-        return ind+1;
+        return ind + 1;
     }
 
     public int removeDuplicatesV2_2(int[] nums) {
         if (nums.length <= 2) return nums.length;
         int ind = 2;
         for (int i = 2; i < nums.length; i++) {
-            if (nums[i] != nums[ind-2]){
+            if (nums[i] != nums[ind - 2]) {
                 nums[ind] = nums[i];
                 ind++;
             }
@@ -154,7 +157,7 @@ public class ArrayAndStringEx {
     public static int majorityElement(int[] nums) {
         int value = nums[0];
         int count = 1;
-        for (int i = 1; i< nums.length; i++) {
+        for (int i = 1; i < nums.length; i++) {
             if (value == nums[i]) {
                 count++;
             } else {
@@ -192,10 +195,10 @@ public class ArrayAndStringEx {
         int min = prices[0];
         int maxDiff = 0;
         int sum = 0;
-        for (int i = 1; i<prices.length; i++) {
-            if (prices[i] < prices[i-1]) {
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] < prices[i - 1]) {
                 min = prices[i];
-                sum +=maxDiff;
+                sum += maxDiff;
                 maxDiff = 0;
             } else if (prices[i] - min > maxDiff) {
                 maxDiff = prices[i] - min;
@@ -206,18 +209,18 @@ public class ArrayAndStringEx {
 
     public int maxProfit2(int[] prices) {
         int sum = 0;
-        for (int i = 1; i<prices.length; i++) {
-            if (prices[i] > prices[i-1]) {
-                sum +=prices[i] - prices[i-1];
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                sum += prices[i] - prices[i - 1];
             }
         }
         return sum;
     }
 
     public boolean canJump(int[] nums) {
-        int l = nums.length-1;
-        for (int j = l-1; j>=0; j--){
-            if (l-j <= nums[j]) l = j;
+        int l = nums.length - 1;
+        for (int j = l - 1; j >= 0; j--) {
+            if (l - j <= nums[j]) l = j;
         }
 
         return l == 0;
@@ -228,18 +231,18 @@ public class ArrayAndStringEx {
         int i = 0;
         int inext = 0;
         int numJumps = 0;
-        while(i <nums.length-1){
+        while (i < nums.length - 1) {
             int ind = 0;
             int maxDist = 0;
-            for(int j = inext; j < nums.length && iDist > 0; j++){
-                if (maxDist< nums[j] + j){
+            for (int j = inext; j < nums.length && iDist > 0; j++) {
+                if (maxDist < nums[j] + j) {
                     maxDist = nums[j] + j;
                     ind = j; //откуда можно прыгнуть дальше всего
                 }
                 iDist--;
             }
             //сдвигаем на следующий прыжок
-            inext = ind +1;
+            inext = ind + 1;
             iDist = nums[ind];
             i = nums[ind] + ind;
             numJumps++;
@@ -247,7 +250,48 @@ public class ArrayAndStringEx {
         return numJumps;
     }
 
-    public static void main(String[] args) {
+    public static String longestCommonPrefix(String[] strs) {
+        int prefixLength = strs[0].length();
+        for (int i = 1; i < strs.length; i++) {
+            for (int j = 0; j < Math.min(prefixLength, strs[i].length()); j++) {
+                if (strs[i - 1].charAt(j) != strs[i].charAt(j)) {
+                    prefixLength = Math.min(prefixLength, j);
+                    break;
+                }
+            }
+            prefixLength = Math.min(prefixLength, strs[i].length());
+        }
 
+        return prefixLength == 0 ? "" : strs[0].substring(0, prefixLength);
+    }
+
+    public String longestCommonPrefix2(String[] strs) {
+        String prefix = strs[0];
+
+        for (int i = 1; i < strs.length; i++) {
+            while (strs[i].indexOf(prefix) != 0) { //if == 0, prefix matches the start of string
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) {
+                    return "";
+                }
+            }
+        }
+        return prefix;
+    }
+
+
+    public String longestCommonPrefix3(String[] strs) {
+        Arrays.sort(strs);
+        for (int j = 0; j < Math.min(strs[0].length(), strs[strs.length - 1].length()); j++) {
+            if (strs[0].charAt(j) != strs[strs.length - 1].charAt(j)) {
+                return j == 0 ? "" : strs[0].substring(0, j);
+            }
+        }
+
+        return strs[0].isEmpty() ? "" : strs[0];
+    }
+
+    public static void main(String[] args) {
+        longestCommonPrefix(new String[]{"aaa", "aa", "aaa"});
     }
 }
